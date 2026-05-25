@@ -25,6 +25,9 @@ public class currentWeather
     public double wind_speed_10m { get; set; }
     public double wind_direction_10m { get; set; }
     public double wind_gusts_10m { get; set; }
+
+    // Added property to hold converted local time to fix CS1061
+    public DateTime localTime { get; set; }
 }
 
 // Our namespace for the API call function.
@@ -32,7 +35,7 @@ namespace OpenWeather.Api
 {
     public static class WeatherApi
     {
-        public static async Task GetData(string latitude, string longitude)
+        public static async Task<currentWeather> GetData(string latitude, string longitude)
         {
             // Open-Meto API Call URL
             string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,snowfall,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m";
@@ -56,7 +59,7 @@ namespace OpenWeather.Api
             if (!root.TryGetProperty("current", out var currentWeatherElement))
             {
                 Console.WriteLine("Response JSON does not contain a 'current' property.");
-                return;
+                return null;
             }
 
             // Deserialize the "current" property into our currentWeather class. If deserialization fails, print an error message and return.
@@ -64,7 +67,7 @@ namespace OpenWeather.Api
             if (data == null)
             {
                 Console.WriteLine("Unable to parse current weather data.");
-                return;
+                return null;
             }
 
             // Extract the time attribute which is in the form of a string.
@@ -74,21 +77,9 @@ namespace OpenWeather.Api
             var dateTime = DateTime.Parse(time);
 
             // Convert the DateTime object to local time.
-            var localTime = dateTime.ToLocalTime();
+            data.localTime = dateTime.ToLocalTime();
 
-            // Print the time and all the data attributes to the console. 
-            Console.WriteLine($"\nTime: {localTime}\n");
-            Console.WriteLine($"2-Meter Temperature: {Math.Round(unitConversion.toFahrenheit(data.temperature_2m))}°F");
-            Console.WriteLine($"2-Meter Relative Humidity: {data.relative_humidity_2m}%");
-            Console.WriteLine($"Apparent Temperature: {Math.Round(unitConversion.toFahrenheit(data.apparent_temperature))}°F");
-            Console.WriteLine($"Precipitation: {Math.Round(unitConversion.toInches(data.precipitation), 2)} in");
-            Console.WriteLine($"Snowfall: {Math.Round(unitConversion.toInches(data.snowfall), 2)} in");
-            Console.WriteLine($"Cloud Cover: {data.cloud_cover}%");
-            Console.WriteLine($"Pressure (Reduced to MSL): {data.pressure_msl} hPa");
-            Console.WriteLine($"Surface Pressure: {data.surface_pressure} hPa");
-            Console.WriteLine($"10-Meter Wind Speed: {Math.Round(unitConversion.toMph(data.wind_speed_10m))} mph");
-            Console.WriteLine($"10-Meter Wind Direction: {data.wind_direction_10m}°");
-            Console.WriteLine($"10-Meter Wind Gusts: {Math.Round(unitConversion.toMph(data.wind_gusts_10m))} mph\n");
+            return data;
         }
     }
 }
