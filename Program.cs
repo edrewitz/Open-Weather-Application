@@ -16,6 +16,7 @@ namespace Program
         public static async Task Main(string[] args)
         {
             Console.WriteLine("This application retrieves the current weather from the Open-Meteo API for a specified location.\n");
+            Console.WriteLine("(C) Eric J. Drewitz 2026\n");
             // Continuous loop until the user manually exits the command prompt. 
             while (true)
             {
