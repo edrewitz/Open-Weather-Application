@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * This file hosts the functions for unit conversion.
+ * 
+ * (C) Eric J. Drewitz 2026
+ */
+
+
+using System;
 
 namespace OpenWeather.Calc
 {
