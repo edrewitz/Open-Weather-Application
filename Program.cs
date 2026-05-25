@@ -29,7 +29,6 @@ namespace OpenWeather
         public double temperature_2m { get; set; }
         public double relative_humidity_2m { get; set; }
         public double apparent_temperature { get; set; }
-
         public double precipitation { get; set; }
         public double snowfall { get; set; }
         public double cloud_cover { get; set; }
