@@ -25,8 +25,6 @@ public class currentWeather
     public double wind_speed_10m { get; set; }
     public double wind_direction_10m { get; set; }
     public double wind_gusts_10m { get; set; }
-
-    // Added property to hold converted local time to fix CS1061
     public DateTime localTime { get; set; }
 }
 
